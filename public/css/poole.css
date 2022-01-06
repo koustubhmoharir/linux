@@ -432,3 +432,14 @@ a.pagination-item:hover {
 .task-list-item-checkbox {
   margin-right: 0.5rem;
 }
+
+aside {
+    width: 40%;
+    padding: .25rem 0 .25rem .5rem;
+    margin-left: .5rem;
+    float: right;
+    box-shadow: inset 5px 0 5px -5px #29627e;
+    font-style: italic;
+    color: #29627e;
+    clear: both;
+}
