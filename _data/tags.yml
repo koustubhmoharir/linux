@@ -1,2 +1,4 @@
 - slug: users
   name: users
+- slug: filesystem
+  name: filesystem

@@ -1,5 +1,5 @@
 ---
 layout: posts_by_tag
 tag: users
-title: Posts tagged Users
+title: Posts tagged users
 ---
