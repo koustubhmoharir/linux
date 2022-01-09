@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Filesystem"
-date:   2022-01-06 18:31:37 +0530
+date:   2022-01-06 22:34:00 +0530
 categories: basics
 tags: filesystem
 ---
