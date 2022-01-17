@@ -82,7 +82,7 @@ endif
 
 ```
 
-Content copied with `y` from vim is put onto the Windows clipboard.
+Content copied with `y` from vim is put onto the Windows clipboard (Do not exit vim before pasting it elsewhere).
 Content from the Windows clipboard can be pasted into vim with `Ctrl + Shift + v` instead of `p`.
 
 ## Other useful commands
