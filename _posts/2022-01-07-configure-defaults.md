@@ -26,6 +26,11 @@ Enter the following content in the file and save it
 # This controls the default time style in the output of ls
 export TIME_STYLE=long-iso
 
+# This improves tab completion
+bind 'set show-all-if-ambiguous on'
+bind 'TAB:menu-complete'
+bind '"\e[Z":menu-complete-backward'        #\e[Z is the code for Shift + Tab
+
 #This disables the ability to suspend the terminal with Ctrl + S and unfreeze it with Ctrl + Q
 stty -ixon
 

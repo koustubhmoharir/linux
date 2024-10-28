@@ -22,8 +22,6 @@ Example: `cd /` references a builtin called cd.
 
 `help builtin_name` can be used to get help on the usage of a builtin.
 
-Many executables have a `--help` option. Alternatively, `man executable_name` can be used to get the manual page for standard executables.
-
 There are some names like `echo` that are both a shell builtin as well as an executable and there may be differences in behavior between them. In such a case, the shell will interpret `echo` as a builtin. To force the shell to interpret a name as an executable, start the command with `command`. For example `command echo 'whatever'` will run the executable echo instead of the builtin.
 
 ## Variables
@@ -114,4 +112,4 @@ $ print_args "a 'b b' c"
 a 'b b' c
 ```
 
-Within bash, **but not in dash**, putting a `$` to the left of a single quoted string allows the use of backslash as an escape character. Thus `$'a\'b'` produces the string `a'b` and `$'a\\b'` produces the string `a\b`. Because this does not work in dash, this construct is best avoided in shell scripts. In general, writing robust shell scripts is very difficult. For any non-trivial task, it is better to use a language like Python instead of Shell. Using the non-portable improvements in any particular shell variant is probably not worth it. The use of Shell can be limited to interactive use and to tie together scripts and executables written in other languages.
+Within bash, **but not in dash**, putting a `$` to the left of a single quoted string allows the use of backslash as an escape character. Thus `$'a\'b'` produces the string `a'b` and `$'a\\b'` produces the string `a\b`. Because this does not work in dash, this construct is best avoided in shell scripts. In general, writing robust shell scripts is very difficult. For any non-trivial task, it is better to use a language like Python instead of Shell. Using the non-portable improvements in any particular shell variant is probably not worth it. The use of Shell can be limited to interactive use and to tie together scripts and executables written in other languages. Some information about portability of syntax between bash and dash can be found [here](https://wiki.ubuntu.com/DashAsBinSh)

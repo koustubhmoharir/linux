@@ -16,6 +16,7 @@ permalink: /guide/
 - [Configure Defaults](_posts/2022-01-07-configure-defaults.md)
 - [Multitasking](_posts/2022-01-08-multitasking.md)
 - [Shell Syntax](_posts/2022-01-16-shell-basics.md)
-- [Piping Commands](_posts/2022-01-17-redirection-piping.md)
+- [Redirection and Piping](_posts/2022-01-17-redirection-piping.md)
+- [Searching with grep](_posts/2022-01-18-searching-with-grep.md)
 - [Common Commands](_posts/2022-01-07-common-commands.md)
 

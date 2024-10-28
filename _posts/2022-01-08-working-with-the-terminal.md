@@ -46,3 +46,13 @@ Press `Ctrl + G` to exit the search without any text on the prompt.
 ## Editing a complex command
 
 `Ctrl + XE` opens an editor with the text on the console. Once editing is complete, exiting the editor with a save executes the command. To exit the editor without submitting the command, delete the text in the editor first.
+
+## Getting help
+
+The help command can be used to get help on any builtin command provided by the shell. For example `help echo` prints help on the terminal.
+
+Many executables have a `--help` option. For example, `ls --help` can be used to print help. However this can be cumbersome to read. A better approach is to use `man executable_name` to get the manual page for standard executables. When using `man` the interface is similar to vi. To search within this interface, press `/` followed by the search text and then Enter. Press `n` for the next search result and `Shift + n` for the previous one. To follow links within the man page, move the cursor within the link and press `Ctrl + ]`. To go back, press `Ctrl + O`
+
+## Viewing text files
+
+Text files can be viewed conveniently with the less command. The interface is very similar to the one provided by man. For example `less /etc/vim/vimrc` shows the content of this file in a readonly mode. This is very convenient when there is no intent to modify the file. Press q to exit the view. To start editing the file directly from vim, press `v` to open it in vim.

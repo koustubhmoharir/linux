@@ -66,7 +66,7 @@ Press `:` to enter a mode where a command can be typed in at the bottom and subm
 
 Getting vim to copy and paste from the system clipboard seems tricky. The following solution works for wsl
 
-Create a ~/.vimrc file and enter the code below
+Create a /etc/vim/vimrc.local file and enter the code below
 ```
 " Not sure why this is required. Probably some broken integration with Windows Terminal
 set background=dark

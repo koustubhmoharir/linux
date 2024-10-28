@@ -31,6 +31,8 @@ The `>&` operator works with a file descriptor on its right instead of a file pa
 
 If the shell has the `-C` (no clobber) option active, redirection to a file with `>` will fail with an error. This is useful to prevent accidental overwriting of files with a redirection. To use an overwriting redirection in this case, the `>|` operator can be used instead of `>`. This operator overrides the `-C` option to allow overwriting.
 
+The file `/dev/null` is a special file that ignores anything written to it. This can be used to ignore the output or error or both with appropriate redirections. For example, `command > /dev/null 2>&1` redirects both the standard output and standard error to `/dev/null` ensuring that anything sent to these streams is simply discarded.
+
 The `<` operator can be used to redirect the input stream.
 
 ```
