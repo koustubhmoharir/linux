@@ -8,6 +8,32 @@ tags:
 
 The [official Docker installation page for Ubuntu](https://docs.docker.com/engine/install/ubuntu/) has instructions for installation of Docker Engine that can be adapted for use with WSL. The official page promotes the installation of Docker Desktop which bundles Docker Engine and requires a commercial license for most organizations. Docker Engine can be used without Docker Desktop.
 
+## Verify systemd is enabled in WSL
+
+Recent versions of WSL use systemd by default for Ubuntu, but older versions don't. If you installed Ubuntu before this change, systemd may not be enabled. Run `wsl --update` in cmd to ensure that wsl is up to date.
+
+Open a terminal on Ubuntu and open the file `/etc/wsl.conf` in a text editor (use `nano /etc/wsl.conf` to open the file in nano). If you see `systemd=true` in the boot section, systemd is already enabled, skip the rest of this section.
+
+If not, add this line in the boot section as shown below and save the file.
+
+```
+[boot]
+systemd=true
+```
+
+## Configure WSL networkingMode to mirrored
+
+Create or open the file `%UserProfile%\.wslconfig` in Windows and set the networkingMode in wsl2 section to mirrored as shown below.
+
+```
+[wsl2]
+networkingMode=mirrored
+```
+
+The default networkingMode is NAT. Changing it to mirrored enables applications running in WSL to connect to applications running in Windows with 127.0.0.1 as localhost. [The Microsoft page on networking considerations in WSL](https://learn.microsoft.com/en-us/windows/wsl/networking?source=recommendations) has more details.
+
+If you made any changes to WSL configuration in this or the previous section, exit out of Ubuntu with `exit` and then run `wsl --shutdown` in cmd. Then open Ubuntu again.
+
 ## Uninstall conflicting packages
 
 ```
@@ -38,23 +64,11 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 ```
 Note: This is taken from the official page but apt-get has been replaced with apt
 
-## Start the Docker daemon
+## Start the Docker daemon if necessary
 
-```
-sudo service docker start
-```
-Note: On WSL, Docker does not start automatically at startup by default. It is possible to [configure WSL to start Docker automatically](https://stackoverflow.com/a/74662813) by editing (or creating) the file /etc/wsl.conf and making sure that the boot section in this file has the command `service docker start`. Use a text editor like nano or vi to edit this file, for example `sudo nano /etc/wsl.conf`. The space after equals is probably required.
+Run `systemctl is-active docker.service` to check if the docker is running. If not, start it with `sudo systemctl docker start`
+Similarly, check if docker is configured to auto-start with `systemctl is-enabled docker.service`. If not, enable it with `sudo systemctl enable docker` if desired. If it is not enabled, you will need to start it manually before running any docker commands.
 
-```
-[boot]
-command= service docker start
-```
-If there is any existing command, use semi-colon to separate the commands.
-
-Verify that Docker is running
-```
-sudo service docker status
-```
 ## Test by running the hello-world image
 ```
 sudo docker run hello-world
@@ -73,4 +87,18 @@ newgrp docker
 Verify that docker commands work without sudo
 ```
 docker run hello-world
+```
+
+## Configure Docker to rotate the log file
+
+Docker's log files may eventually take up too much disk space. [Logging can be configured](https://docs.docker.com/engine/logging/drivers/json-file/) as desired. Save the configuration below to /etc/docker/daemon.json as a starting point.
+
+```
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
 ```

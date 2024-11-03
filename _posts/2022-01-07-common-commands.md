@@ -49,6 +49,7 @@ Execute permission on a directory is required to cd into it.
 Produces a directory listing of the current working directory or a specified absolute or relative path.
 
 `ls -phlA` or `ls -phlAt` or `ls -phlAS`
+
 `-p` shows trailing slashes after directory names  
 `-h` shows sizes in a human readable format in K, M, G etc  
 `-l` shows detailed tabular output instead of a horizontal list of just names  
