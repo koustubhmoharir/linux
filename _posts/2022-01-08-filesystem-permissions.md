@@ -88,3 +88,21 @@ Confusingly, the command `umask -S` displays the bitwise *complement* of the uma
 The `setuid`, `setgid`, and `sticky` bits in the mask (if any) are ignored.
 
 There is no way to set umask at a directory level. It can only be set at a process level.
+
+## Changing owners
+
+The owning user (and optionally the owning group) of a file can be changed with `chown`. This command can be run only by the root user (or a process which has been granted this capability).
+
+The owning group of a file can be changed with `chgrp`. This command can be run by root or by the owning user. When run by a non-root user, the user must belong to the new group.
+
+## Changing the mode
+
+The permission flags are called `mode` and can be changed with `chmod`. This command can be run by the root or the owning user. Membership in a group that owns the file is not enough to run this command.
+
+## setuid and setgid interaction with processes
+
+When an executable file is run by a user, the user id, primary group id, and secondary group ids are set as the real user id, real group id, and supplementary group ids of the process. If the file has the setuid flag, the effective user id of the process is set to the owning user id of the file, otherwise the effective user id is same as the real user id. Similarly, if the file has the setgid flag, the effective group id of the process is set to the owning group id of the file. otherwise the effective group id is same as the real group id.
+
+The effective user id, effective group id, and the supplementary group ids are used to perform access checks against any files that the process tries to access.
+
+Processes can make system calls to change any of these attributes of the process, subject to restrictions to prevent privilege escalation. In particular, a program run with setuid / setgid can temporarily or permanently change the effective user id and effective group id to drop the privileges it has gained through setuid / setgid.

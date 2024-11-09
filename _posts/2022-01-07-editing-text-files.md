@@ -15,7 +15,7 @@ When using wsl, it is possible to use local windows programs to edit files. For 
 
 Using Windows tools is a crutch as these are not going to be available in other environments. It is necessary to take the time to learn vim. Most of the content below is taken from [Beginner's guide to vim](https://www.linux.com/training-tutorials/vim-101-beginners-guide-vim/). It takes some getting used to, but it is easy to see that vim is a [powerful editor](https://www.barbarianmeetscoding.com/blog/boost-your-coding-fu-with-vscode-and-vim).
 
-Ubuntu has a restricted version of vim. Run `sudo apt-get install vim-gtk` to replace it with a version with more features.
+Ubuntu has a restricted version of vim. Run `sudo apt install vim-gtk` to replace it with a version with more features.
 
 The `vi path_to_file` command opens the vim editor.
 
@@ -54,7 +54,7 @@ Press `:` to enter a mode where a command can be typed in at the bottom and subm
 
 `:w` to save work (changes)  
 `:w` new_file_name to save a copy  
-`:wq` to save work and quit  
+`x` or `:wq` to save work and quit  
 `:q` to quit if there are no changes  
 `:q!` to quit and discard any unsaved changes
 
@@ -62,28 +62,36 @@ Press `:` to enter a mode where a command can be typed in at the bottom and subm
 
 `:w` cannot write a file without write permission. When such a file is opened, vim shows \[readonly] at the bottom. However, it is possible to still edit such a file and save it with sudo. To do this, use `:w !sudo tee %`
 
-## Using the system clipboard
+## Configuring the cursor to match the mode
 
-Getting vim to copy and paste from the system clipboard seems tricky. The following solution works for wsl
-
-Create a /etc/vim/vimrc.local file and enter the code below
+In the /etc/vim/vimrc.local file created in the last section, add the following
 ```
-" Not sure why this is required. Probably some broken integration with Windows Terminal
-set background=dark
-
-" WSL yank support
-let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
-if executable(s:clip)
-    augroup WSLYank
-        autocmd!
-        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
-    augroup END
-endif
-
+" set cursor to be a blinking line in insert mode
+let &t_SI .= "\<Esc>[5 q"
+" set cursor to be a solid box in normal mode
+let &t_EI .= "\<Esc>[2 q"
+" set cursor to be a blinking box in replace mode
+let &t_SR .= "\<Esc>[1 q"
+" set cursor to replace mode when leaving buffer in all windows
+" revert cursor back to normal mode when entering buffer
+autocmd BufEnter * execute 'silent !echo -ne "' . &t_EI . '"'
+autocmd BufWinLeave * execute 'silent !echo -ne "' . &t_SI . '"'
 ```
+This makes the cursor more visible, and also makes it easier to see if the editor is in normal or insert or replace mode. The `t_SI`, `t_EI`, and `t_SR` are vim options, and somewhat confusingly, a let statement with `&` changes the value of an option!
 
-Content copied with `y` from vim is put onto the Windows clipboard (Do not exit vim before pasting it elsewhere).
-Content from the Windows clipboard can be pasted into vim with `Ctrl + Shift + v` instead of `p`.
+In the ~/.vimrc file, place the following content
+```
+set belloff=all
+set tabstop=4
+set shiftwidth=4 smarttab
+set expandtab
+set autoindent
+set smartindent
+set whichwrap+=<,>,[,],h,l
+set relativenumber number
+set clipboard^=unnamedplus
+set foldcolumn=3
+```
 
 ## Other useful commands
 
@@ -124,3 +132,5 @@ Visual select and then `~` toggles the case, `U` converts to upper and `u` conve
 To retain the line, press `yyp` before `!!bash`
 
 To execute multiple lines in bash and retain them, press `Shift + V` to enter visual line selection, use arrow keys to select lines, `Shift + p` to paste, `gv` to reselect, and `!bash`
+
+Use `Ctrl + G` to show the current file name, and `1` followed by `Ctrl + G` to show the file path (not expanded) in the status bar

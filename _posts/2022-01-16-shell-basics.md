@@ -12,6 +12,8 @@ Documentation on the dash shell (default in Ubuntu for non-interactive use) can 
 
 The first word of a simple command (single command without redirection) is typically the path to an executable or the name of a builtin. This may be followed by arguments in subsequent words separated by spaces. For executables that are on the search path (determined by the PATH environment variable), only the name of the executable needs to be specified
 
+<aside>There are some names like `echo` that are both a shell builtin as well as an executable and there may be differences in behavior between them. In such a case, the shell will interpret `echo` as a builtin. To force the shell to interpret a name as an executable, start the command with `command`. For example `command echo 'whatever'` will run the executable echo instead of the builtin.</aside>
+
 Example: `ls -phlA` references an executable called ls.  
 `which ls` can be used to show the full path where ls is located.
 `-phlA` is an argument. Most executables and builtins interpret an argument with a starting hyphen as a combination of single letter options. In this case the `p`, `h`, `l`, `A` options are all specified. The order in which these are specified does not matter. There may be a long-form version of single letter options. For example `ls -phlA` is equivalent to `ls -phl --almost-all` where the `A` option is specified in long-form.
@@ -21,8 +23,6 @@ Example: `cd /` references a builtin called cd.
 `type cd` outputs "cd is a shell builtin"
 
 `help builtin_name` can be used to get help on the usage of a builtin.
-
-There are some names like `echo` that are both a shell builtin as well as an executable and there may be differences in behavior between them. In such a case, the shell will interpret `echo` as a builtin. To force the shell to interpret a name as an executable, start the command with `command`. For example `command echo 'whatever'` will run the executable echo instead of the builtin.
 
 ## Variables
 
@@ -43,7 +43,7 @@ When variables are used as arguments, they should generally be placed in double 
 $ ABC='a b c'
 $ echo $ABC
 ```
-The `echo $ABC` command is expanded by the shell to `echo a b c` and not to `echo 'a b c'. This is usually not desirable. `echo "$ABC"` is equivalent to `echo 'a b c'`
+The `echo $ABC` command is expanded by the shell to `echo a b c` (3 separate arguments to echo) and not to `echo 'a b c'` (1 argument to echo). This is usually not desirable. `echo "$ABC"` is equivalent to `echo 'a b c'`.
 
 ## Variable expansion
 
@@ -51,17 +51,14 @@ When the shell replaces an expression of the form `${VAR}` with the value of VAR
 
 It can be useful to detect whether a variable is set or not and whether it has a value or it is null. Note that an empty string is considered to be the same as null. In other words, a variable may have a non-null value, or it may have a null value, or it may not exist at all (not set), and it may be useful to determine this. This can be achieved via modifications to variable expansion.
 
-`${VAR-word}` expands VAR if it is set, otherwise it expands word. This will produce a null value if VAR is null  
-`${VAR+word}` expands *word* if VAR is set, otherwise it produces a null value.  
-`${VAR:-word}` expands VAR if it is set to a non-null value, otherwise it expands word  
-`${VAR:+word}` expands *word* if VAR is set to a non-null value, otherwise it produces a null value.  
+`${VAR-word}` expands VAR if it is set, otherwise it expands *word*. This will produce a null value if VAR is null. Read `VAR-` as the condition *VAR is not set*.  
+`${VAR+word}` expands *word* if VAR is set, otherwise it produces a null value. Read `VAR+` as the condition *VAR is set*.  
+`${VAR:-word}` expands VAR if it is set to a non-null value, otherwise it expands *word*. Read `VAR:-` as the condition *VAR is not useful (not set or null)*.  
+`${VAR:+word}` expands *word* if VAR is set to a non-null value, otherwise it produces a null value. Read `VAR:+` as the condition *VAR is useful (set and not null)*.  
 
-This can be remembered by considering all of these as checks on the value of VAR. There are four types of checks `+`, `-`, `:+`, `:-`. The part after the check represents the value to be used if the check succeeds. If the check fails, the value of VAR will be used. However, if VAR is not set at all, the expression must still return something, so it returns a null value.  
-`+` stands for a positive existence check.  
-`-` stands for a negative existence check.  
-`:` modifies existence to mean existence with a non-null value.
+The overall expression can be read as *if condition then word, else VAR* with condition read as above.
 
-`${VAR=word}` and `${VAR:=word}`: `=` is like `-` but it also assigns the value of word to VAR when the check succeeds. In other words, `${VAR:=word}` assigns the value of word to VAR if VAR is unset or null. The expansion as a whole produces the final value of VAR.
+`${VAR=word}` and `${VAR:=word}`: `=` is like `-` but it also assigns the value of word to VAR when the condition is true. In other words, `${VAR:=word}` assigns the value of word to VAR if VAR is unset or null. The expansion as a whole produces the final value of VAR.
 
 Note that word may itself be a variable, so that `${VAR:-${VAR_DEF}}` works.
 

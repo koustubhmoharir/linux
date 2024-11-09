@@ -20,7 +20,13 @@ As an example, under default settings on Ubuntu, running a shell script that ref
 
 Because shell scripts run in a child process instead of running directly in the interactive shell, local variables defined in the interactive shell are not available to the script. Variables can be added to the shell's environment. These variables are copied into the environment of the child process.
 
-## Bash Shortcuts
+## Bash Shortcuts in vi mode
+
+Use `set -o vi` to put the shell in vi editing mode if it isn't already in vi editing mode.
+
+The shell is in insert mode by default. Switching between insert and command modes can be done in the same way as in vim (Esc for normal mode, i or a for insert mode).
+
+## Bash Shortcuts in emacs mode
 
 Ctrl + K cuts all text after the cursor and puts it in a buffer (anything that is cut goes into the buffer)  
 Ctrl + U cuts all text before the cursor  
@@ -33,7 +39,9 @@ Ctrl + XX jumps to the start of the text, pressing it again after typing somethi
 
 The Up and Down keys can be used to move up and down through previously executed commands.
 
-To search for a previous command press `Ctrl + R` to enter search mode. Start typing the command. Move through the results by pressing `Ctrl + R` to go further back or `Ctrl + S` to move forward (after having gone back).  
+If the hstr package has been installed, use `Ctrl + Alt + R` to search for commands in history. Press `Ctrl + K`, `Ctrl + J` or the arrow keys to navigate up and down, and type part of a command to filter the history. Press Tab to put the selected command on the prompt without executing it, or Enter to execute it directly. Press Esc to get back to an empty prompt.
+
+If the hstr package has not been installed, use `Ctrl + R` to enter search mode. Start typing the command. Move through the results by pressing `Ctrl + R` to go further back or `Ctrl + S` to move forward (after having gone back).  
 Press `Ctrl + O` or Enter to run the command.
 Hit `Ctrl + J` or Esc or the left / right arrow keys to get back to command mode with the text of the selected command on the prompt which can be edited further.
 Press `Ctrl + G` to exit the search without any text on the prompt.
@@ -45,7 +53,11 @@ Press `Ctrl + G` to exit the search without any text on the prompt.
 
 ## Editing a complex command
 
-`Ctrl + XE` opens an editor with the text on the console. Once editing is complete, exiting the editor with a save executes the command. To exit the editor without submitting the command, delete the text in the editor first.
+In vi mode, press Esc and then v to open the command in vi. Quitting vi will execute the command.
+
+In emacs mode, `Ctrl + XE` opens an editor with the text on the console. Once editing is complete, exiting the editor with a save executes the command.
+
+To exit the editor without submitting the command, delete the text in the editor first.
 
 ## Getting help
 
@@ -56,3 +68,7 @@ Many executables have a `--help` option. For example, `ls --help` can be used to
 ## Viewing text files
 
 Text files can be viewed conveniently with the less command. The interface is very similar to the one provided by man. For example `less /etc/vim/vimrc` shows the content of this file in a readonly mode. This is very convenient when there is no intent to modify the file. Press q to exit the view. To start editing the file directly from vim, press `v` to open it in vim.
+
+## Editing command output
+
+The output of a command can be piped into vi with `command | vi -`. This can be very useful when the command output is large.
