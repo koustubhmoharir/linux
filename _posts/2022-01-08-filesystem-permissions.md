@@ -22,11 +22,11 @@ Flags can be represented as a letter or as a number which can be combined bitwis
 `x` (1): If this is present, execute access is granted  
 
 Useful and common combinations:  
-`rwx` (7) - full access  
-`r-x` (5) - read and execute  
+`---` (0) - no access  
 `r--` (4) - read only  
+`r-x` (5) - read and execute  
 `rw-` (6) - read and write but not execute  
-`---` (0) - no access
+`rwx` (7) - full access (read, write, execute)
 
 Combinations that are not useful:  
 `--x` (1) - execute without read. This is not useful because the file must be read if it is to be executed. However, when running as root (directly or via sudo), read permission is not required to execute. Execute permission is still required.  
@@ -56,19 +56,26 @@ The numeric representation of this is 6755
 
 ### Flags for directories
 
-The flags and their text and numeric representations are the same for directories, but their interpretation is different.
+The flags and their text and numeric representations are the same for directories, but [their interpretation is different](https://unix.stackexchange.com/a/317446).
 
 `execute` for a directory means the ability to set it as the current working directory as well as the ability to access any files or sub-directories directly or indirectly under it. Permission to execute a directory can be thought of as permission to "enter". Without this permission, nothing within the directory can be accessed. For a file or directory to be accessible, execute permission must exist on every parent directory up to the root.
 
-`read` for a directory means the ability to list the contents of the directory. This does not affect the permissions on files or sub-directories within it. Even without read permission on the directory, items within the directory can be read, written, or executed as long as their path is known and the permissions on those items allows these operations.
+`read` (along with execute) for a directory means the ability to list the contents of the directory. This does not affect the permissions on files or sub-directories within it. Even without read permission on the directory, items within the directory can be read, written, or executed as long as their path is known and the permissions on those items allows these operations.
 
-`write` for a directory means the ability to create, rename, or delete items in the directory. A file without write permission *can* be deleted or renamed if there is write permission on its immediate parent directory.
+`write` (along with execute) for a directory means the ability to create, rename, or delete items in the directory. A file without write permission *can* be deleted or renamed if there is write permission on its immediate parent directory. A file with write permission cannot be deleted or renamed, unless there is write permission on its immediate parent directory.
 
 The `setuid` bit on a directory is ignored.
 
 When the `setgid` bit is set on a directory, any newly created files or directories within it inherit the owner group. Sub-directories will also inherit the `setgid` bit. Without this bit, the owner group is the primary group of the user who created the items. Setting this flag does not affect any items already in the directory. Items moved into the directory from elsewhere also do not inherit anything.
 
 When the `sticky` bit is set on a directory, files in that directory can only be renamed or deleted by the owner of the file or the owner of the directory. Unlike the `setgid` bit, this is not inherited by sub-directories and does not affect files in sub-directories. This bit is useful on temporary folders where multiple users may create files and files created by one user should not be deleted or renamed by another.
+
+
+Useful combinations:  
+`---` (0) - no access  
+`r-x` (5) - read and execute  
+`rwx` (7) - full access (read, write, execute)
+
 
 ## Viewing permissions
 
