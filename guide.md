@@ -11,7 +11,7 @@ permalink: /guide/
 - [Users and Groups](_posts/2022-01-06-users-groups.md)
 - [Filesystem](_posts/2022-01-06-filesystem.md)
 - [Filesystem Permissions](_posts/2022-01-08-filesystem-permissions.md)
-- [chmod examples](_posts/2024-11-09-chmod-examples.md)
+- [Changing owners and permissions](_posts/2024-11-09-chmod-chown-chgrp.md)
 - [Editing Text Files](_posts/2022-01-07-editing-text-files.md)
 - [Configure Defaults](_posts/2022-01-07-configure-defaults.md)
 - [Working with the terminal](_posts/2022-01-08-working-with-the-terminal.md)

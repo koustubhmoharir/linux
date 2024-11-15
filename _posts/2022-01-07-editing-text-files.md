@@ -11,11 +11,70 @@ tags:
 When using wsl, it is possible to use local windows programs to edit files. For example `Notepad++.exe path_to_file` works.
 
 
-## Using vim
+## Why vim?
 
-Using Windows tools is a crutch as these are not going to be available in other environments. It is necessary to take the time to learn vim. Most of the content below is taken from [Beginner's guide to vim](https://www.linux.com/training-tutorials/vim-101-beginners-guide-vim/). It takes some getting used to, but it is easy to see that vim is a [powerful editor](https://www.barbarianmeetscoding.com/blog/boost-your-coding-fu-with-vscode-and-vim).
+Using Windows tools is a crutch as these are not going to be available in Linux environments other than WSL. Variants of vi or vim can be expected to be installed by default on every Linux distribution. Moreover, vim is actually an extremely capable editor. Hence it is a very good idea to take the time to learn vim. Ubuntu has a restricted version of vim by default. Run `sudo apt install vim-gtk` to replace it with a version with more features.
 
-Ubuntu has a restricted version of vim. Run `sudo apt install vim-gtk` to replace it with a version with more features.
+## Absolute basics
+
+From the terminal, `vi filepath` opens vim.
+
+vim is a *modal* editor. It opens in command (or normal) mode where keys correspond to commands. To input text by typing, it needs to be put into insert mode. A useful way to do this is to press `a` (for append). Pressing Esc puts it back into command mode. Make sure that the cursor renders as a solid rectangle that takes up a whole letter when in command mode and as a thin line between letters when in insert mode. Pressing a puts the insertion point to the right of the cursor (hence append). Pressing `i` (for insert) also puts vim into insert mode with the insertion point to the left of the cursor.
+
+Arrow keys (with or without Ctrl), Page Up, Page Down, etc all work as in other text editors. While there are better alternatives to these keys, starting with these can help in getting work done.
+
+To exit vim with or without saving the buffer (the text being edited), vim must be in command mode. Press Esc to ensure it is in command mode. Then press `:` to bring up a prompt and then `wq` and `Enter` to save and quit. `w` stands for write the buffer to a file. `q` stands for quit. Most commands can be issued directly, but some commands (like `w` and `q`) can only be entered in a prompt with `:`. Enter submits a command in the prompt.
+
+Submitting `q!` force quits the buffer without writing it.
+
+## Searching
+
+Press `/` in command mode to start searching forward from the cursor. Press `?` to start searching backwards. Pressing either of these keys opens a prompt with this key on the prompt. The text to be searched can then be typed on this prompt.
+
+The search text is always interpreted as a regular expression. Unfortunately, the default rules on which characters are interpreted literally and which ones are interpreted as a metacharacter are inconsistent with most modern regular expression flavors. To avoid remembering these rules, it is better to start the search text with either `\v` or `\V`. Starting it with `\v` tells vim to interpret all characters that can possibly be metacharacters as metacharacters unless escaped with `\`. Starting with `\V` tells vim to interpret all characters literally unless escaped with `\`. If the search text has no ambiguous characters then there is no need to use either `\v` or `\V`.
+
+`/\v[vim]` followed by Enter searches for a single character that can be either v, i, or m.  
+`/\V[vim]` followed by Enter searches for the literal string `[vim]`
+
+Having to always type two extra characters can be a bit annoying, but the good thing about this is that regex functionality is always available with the choice of making it easier to type literal text or regex.
+
+The v in `\v` supposedly stands for 'very magic'! It may be easier to remember it as verbatim instead, i.e, vim search works with verbatim regular expressions. To type verbatim text instead, the v is negated by making it upper case.
+
+Pressing Enter after typing in the search pattern moves the cursor to the beginning of the first match in the direction indicated by `/` or `?`. Press `n` for the next match in the same direction or `N` for the next match in the opposite direction.
+
+`/\v<vim>` matches only the full word vim, it does not match substrings. `/\v<vim` matches prefixes and `/\vvim>` matches suffixes.
+
+Pressing the up or down arrow keys immediately after pressing `/` or `?` brings up past searches. Pressing backspace or delete immediately after `/` or `?` cancels the search.
+
+To just search for the full word under the cursor, press `*` for forward search and `#` for backward search. This is obviously much faster than typing in the search text but only works if the cursor is already on the text to be searched.
+
+vim regular expressions are case sensitive by default. To make them case insensitive `\c` can be added anywhere within the regular expression. Adding it before `\v` or `\V` or at the end of the search text is good for readability.
+
+[Consult this excellent article on vim regular expressions](https://thevaluable.dev/regular-expression-basics-vim-grep/) for more details.
+
+## Motions
+
+In command mode, use the `h`, `j`, `k`, `l` keys instead of the arrow keys for moving left, down, up, right respectively by one unit (character or line). This is much faster than moving the fingers to reach the arrow keys.
+
+Typing a number before these keys moves the cursor by the specified number of units. For example, `5j` moves the cursor down by 5 lines. When combined with the feature that shows relative line numbers in the left margin, jumping to any visible line precisely is very easy. This can be particularly useful on slow connections where holding down a key is very imprecise and frustrating.
+
+To go to a specific absolute line number, type the line number followed by either `G` or `gg`. For example `135G` takes the cursor to line number 135, or the last line if the buffer contains fewer than 135 lines.
+
+`e` moves to the end of the current word, but if the cursor is already on the last character of a word, it moves to the end of the next word, where a word is a consecutive sequence of letters, numbers, and underscores. Similarly, `b` moves to the beginning of the current word or the previous word if it is already at the beginning of the current word. `E` and `B` (i.e `e` and `b` with Shift) can be used to shift the interpretation of word to a consecutive sequence of non-whitespace characters. `w` and `W` can be used to jump to the beginning of next word with the same interpretations of a word. `ge` and `gE` can be used to move to the end of the previous word, but this is not convenient. A lot of commands in vim can be modified in some way by prepending them with g. There does not seem to be any clear pattern to this.
+
+Each of these keys (`e`, `b`, `w`) can also be preceded by a number to move by that many words. For example `4e` is the same as pressing `e` 4 times. This is a general pattern in vim.
+
+To move to the beginning of the current line, press `0`. To move to the first non-blank character on the current line (the "real" beginning of the line), press `^`. To move to the end of the current line, press `$`. `^` and `$` are easy to remember as they mean beginning and end in regular expressions too.
+
+`-` and `+` can be used to move to the previous or next line with the cursor at the beginning of the line. This can be useful when there is a need to paste something at the beginning of multiple lines. Like other commands, these commands can also be preceded by a number.
+
+`f` followed by any character finds the next occurrence of the character on the current line and moves the cursor on that character. `F` finds the previous occurrenence. `t` followed by character moves the cursor on the character before the next occurrence. `T` moves the cursor on the character after the previous occurrence (same as t but in the other direction). `;` repeats the last such command. `,` repeats the last such command in the other direction. These commands can be used to quickly move to the desired position on the current line. Repeating a `t` or `T` command manually would not move the cursor at all, but when it is repeated with `;` or `,`, the effect is as if the cursor has been moved by at one position between the repetions.
+
+
+
+Most of the content below is taken from [Beginner's guide to vim](https://www.linux.com/training-tutorials/vim-101-beginners-guide-vim/). It takes some getting used to, but it is easy to see that vim is a [powerful editor](https://www.barbarianmeetscoding.com/blog/boost-your-coding-fu-with-vscode-and-vim).
+
+
 
 The `vi path_to_file` command opens the vim editor.
 
@@ -91,6 +150,15 @@ set whichwrap+=<,>,[,],h,l
 set relativenumber number
 set clipboard^=unnamedplus
 set foldcolumn=3
+set display+=lastline
+```
+
+## Enabling syntax highlighting for various languages
+
+Run the command below to install the vim-polyglot plugin.
+
+```
+git clone --depth 1 https://github.com/sheerun/vim-polyglot ~/.vim/pack/plugins/start/vim-polyglot
 ```
 
 ## Other useful commands

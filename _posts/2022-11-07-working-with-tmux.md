@@ -32,6 +32,9 @@ set-window-option -g xterm-keys on
 # Enable mouse support
 set -g mouse on
 
+# Reduce the delay after pressing Esc
+set -sg escape-time 10
+
 # Change the prefix from Ctrl + B to Ctrl + A
 unbind C-b
 set -g prefix C-a
@@ -41,6 +44,12 @@ set-window-option -g mode-keys vi
 
 # Ctrl + A followed by k will enable copy mode and move to the line above the prompt
 bind k copy-mode -e\; send-keys -X cursor-up
+
+# For some reason Home and End keys don't work correctly without this binding
+# https://stackoverflow.com/a/55616731
+# This is probably related to the xterm-256 we have used for TERM above
+bind -n Home send-keys Escape "OH"
+bind -n End send-keys Escape "OF"
 ```
 
 # Using tmux and working with sessions

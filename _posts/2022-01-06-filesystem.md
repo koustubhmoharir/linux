@@ -11,9 +11,17 @@ There is a [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/
 
 Unsurprisingly, there are many historical reasons for the hierarchy being what it is. There have been attempts to rationalize and modernize the hierarchy based on current considerations. This post draws upon [other](https://askubuntu.com/a/135679) sources as well as observations from the actual filesystem in a fresh installation of Ubuntu 20.04. Because certain directories are required for backward compatibility, Ubuntu uses symbolic links.
 
-## Symbolic Links
+## Symbolic Links vs Hard Links vs Windows Shortcuts
 
-Symbolic Links or symlinks or soft links are like shortcuts in Windows. They point to a file or directory in the same or different filesystem. Symlinks are shown with a starting letter of l in the first column in the output of the `ls -l` command
+Symbolic Links or symlinks or soft links are somewhat similar to shortcuts in Windows. They point to a file or directory in the same or different filesystem. Symlinks are shown with a starting letter of l in the first column in the output of the `ls -l` command.
+
+The filesystem stores the contents and metadata (like permissions) of files in inodes. A file name in a directory is a pointer to the inode. Any number of names in the same filesystem can point to the same inode. Thus, all file paths are just hardlinks to the file content. The output of the `ls -l` command shows the number of hardlinks to the inode in the column next to the permissions. A symlink is a separate file whose content is a path to a file or a directory. A symlink can be thought of as a pointer to a pointer. If the file path is deleted, the symlink becomes a "dangling" link. If a different file is placed at the file path, the symlink points to it.
+
+A hard link cannot become invalid because the inode is not deleted as long as the count of hard links to it is greater than 0. In fact the delete command `rm` actually just calls `unlink` at the filesystem level. unlink reduces the hardlink count, it may not delete the inode itself.
+
+A Windows shortcut is also a file that contains a file path, but it also contains other information that is understood by the shell. The NTFS filesystem itself has no understanding of Windows shortcuts. In contrast, a symlink is understood by the filesytem itself but contains no more information than a file path.
+
+Since a symbolic link is a pointer to a pointer, programs that modify the filesystem usually need options that control whether they should modify the link or the file pointed to by the link. Often, a `-L` option indicates that the link should be followed. For example `ls -lL` can be used to show the permissions of the target of any links that are listed instead of the permissions on the link itself which have no importance.
 
 ```
 $ ls -l
