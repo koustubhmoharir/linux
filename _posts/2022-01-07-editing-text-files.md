@@ -6,28 +6,7 @@ categories: basics
 tags: 
 ---
 
-## Using Windows tools
-
-When using wsl, it is possible to use local windows programs to edit files. For example `Notepad++.exe path_to_file` works.
-
-
-## Why vim?
-
-Using Windows tools is a crutch as these are not going to be available in Linux environments other than WSL. Variants of vi or vim can be expected to be installed by default on every Linux distribution. Moreover, vim is actually an extremely capable editor. Hence it is a very good idea to take the time to learn vim. Ubuntu has a restricted version of vim by default. Run `sudo apt install vim-gtk` to replace it with a version with more features.
-
-## Absolute basics
-
-From the terminal, `vi filepath` opens vim.
-
-vim is a *modal* editor. It opens in command (or normal) mode where keys correspond to commands. To input text by typing, it needs to be put into insert mode. A useful way to do this is to press `a` (for append). Pressing Esc puts it back into command mode. Make sure that the cursor renders as a solid rectangle that takes up a whole letter when in command mode and as a thin line between letters when in insert mode. Pressing a puts the insertion point to the right of the cursor (hence append). Pressing `i` (for insert) also puts vim into insert mode with the insertion point to the left of the cursor.
-
-Arrow keys (with or without Ctrl), Page Up, Page Down, etc all work as in other text editors. While there are better alternatives to these keys, starting with these can help in getting work done.
-
-To exit vim with or without saving the buffer (the text being edited), vim must be in command mode. Press Esc to ensure it is in command mode. Then press `:` to bring up a prompt and then `wq` and `Enter` to save and quit. `w` stands for write the buffer to a file. `q` stands for quit. Most commands can be issued directly, but some commands (like `w` and `q`) can only be entered in a prompt with `:`. Enter submits a command in the prompt.
-
-Submitting `q!` force quits the buffer without writing it.
-
-## Searching
+## Searching in the buffer
 
 Press `/` in command mode to start searching forward from the cursor. Press `?` to start searching backwards. Pressing either of these keys opens a prompt with this key on the prompt. The text to be searched can then be typed on this prompt.
 
@@ -64,13 +43,16 @@ To go to a specific absolute line number, type the line number followed by eithe
 
 Each of these keys (`e`, `b`, `w`) can also be preceded by a number to move by that many words. For example `4e` is the same as pressing `e` 4 times. This is a general pattern in vim.
 
+`(` and `)` can be used to move to the beginning of the previous or next sentence. This is useful when working with text documents that may have many sentences on the same line.
+
 To move to the beginning of the current line, press `0`. To move to the first non-blank character on the current line (the "real" beginning of the line), press `^`. To move to the end of the current line, press `$`. `^` and `$` are easy to remember as they mean beginning and end in regular expressions too.
 
 `-` and `+` can be used to move to the previous or next line with the cursor at the beginning of the line. This can be useful when there is a need to paste something at the beginning of multiple lines. Like other commands, these commands can also be preceded by a number.
 
-`f` followed by any character finds the next occurrence of the character on the current line and moves the cursor on that character. `F` finds the previous occurrenence. `t` followed by character moves the cursor on the character before the next occurrence. `T` moves the cursor on the character after the previous occurrence (same as t but in the other direction). `;` repeats the last such command. `,` repeats the last such command in the other direction. These commands can be used to quickly move to the desired position on the current line. Repeating a `t` or `T` command manually would not move the cursor at all, but when it is repeated with `;` or `,`, the effect is as if the cursor has been moved by at one position between the repetions.
+`f` followed by any character finds the next occurrence of the character on the current line and moves the cursor on that character. `F` finds the previous occurrenence. `t` followed by character moves the cursor on the character before the next occurrence. `T` moves the cursor on the character after the previous occurrence (same as t but in the other direction). `;` repeats the last such command. `,` repeats the last such command in the other direction. These commands can be used to quickly move to the desired position on the current line. Repeating a `t` or `T` command manually would not move the cursor at all, but when it is repeated with `;` or `,`, the effect is as if the cursor has been moved by one position between the repetions.
 
 
+## Older content (to be organized properly)
 
 Most of the content below is taken from [Beginner's guide to vim](https://www.linux.com/training-tutorials/vim-101-beginners-guide-vim/). It takes some getting used to, but it is easy to see that vim is a [powerful editor](https://www.barbarianmeetscoding.com/blog/boost-your-coding-fu-with-vscode-and-vim).
 
@@ -120,46 +102,6 @@ Press `:` to enter a mode where a command can be typed in at the bottom and subm
 ### Saving a file without write permission
 
 `:w` cannot write a file without write permission. When such a file is opened, vim shows \[readonly] at the bottom. However, it is possible to still edit such a file and save it with sudo. To do this, use `:w !sudo tee %`
-
-## Configuring the cursor to match the mode
-
-In the /etc/vim/vimrc.local file created in the last section, add the following
-```
-" set cursor to be a blinking line in insert mode
-let &t_SI .= "\<Esc>[5 q"
-" set cursor to be a solid box in normal mode
-let &t_EI .= "\<Esc>[2 q"
-" set cursor to be a blinking box in replace mode
-let &t_SR .= "\<Esc>[1 q"
-" set cursor to replace mode when leaving buffer in all windows
-" revert cursor back to normal mode when entering buffer
-autocmd BufEnter * execute 'silent !echo -ne "' . &t_EI . '"'
-autocmd BufWinLeave * execute 'silent !echo -ne "' . &t_SI . '"'
-```
-This makes the cursor more visible, and also makes it easier to see if the editor is in normal or insert or replace mode. The `t_SI`, `t_EI`, and `t_SR` are vim options, and somewhat confusingly, a let statement with `&` changes the value of an option!
-
-In the ~/.vimrc file, place the following content
-```
-set belloff=all
-set tabstop=4
-set shiftwidth=4 smarttab
-set expandtab
-set autoindent
-set smartindent
-set whichwrap+=<,>,[,],h,l
-set relativenumber number
-set clipboard^=unnamedplus
-set foldcolumn=3
-set display+=lastline
-```
-
-## Enabling syntax highlighting for various languages
-
-Run the command below to install the vim-polyglot plugin.
-
-```
-git clone --depth 1 https://github.com/sheerun/vim-polyglot ~/.vim/pack/plugins/start/vim-polyglot
-```
 
 ## Other useful commands
 
