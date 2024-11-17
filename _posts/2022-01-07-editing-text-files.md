@@ -31,6 +31,8 @@ vim regular expressions are case sensitive by default. To make them case insensi
 
 [Consult this excellent article on vim regular expressions](https://thevaluable.dev/regular-expression-basics-vim-grep/) for more details.
 
+It can be difficult to spot the cursor when a search moves it. The .vimrc configuration in [Improving Usability](_posts/2024-11-16-improving-usability.md) flashes the cursor line on pressing `\c`.
+
 ## Motions
 
 In command mode, use the `h`, `j`, `k`, `l` keys instead of the arrow keys for moving left, down, up, right respectively by one unit (character or line). This is much faster than moving the fingers to reach the arrow keys.

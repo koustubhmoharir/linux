@@ -157,6 +157,15 @@ nnoremap <silent> <Down> gj
 inoremap <silent> <Up> <C-o>gk
 inoremap <silent> <Down> <C-o>gj
 
+" Similar visual navigation remappings for Home and End.
+nnoremap <silent> <Home> g^
+nnoremap <silent> <End> g$
+inoremap <silent> <Home> <C-o>g^
+inoremap <silent> <End> <C-o>g$
+
+" Flash the cursor line with \c
+nnoremap <silent> <Leader>c :set cursorline<CR>:sleep 300m<CR>:set nocursorline<CR>
+
 " Put yanked (copied) content on the system clipboard automatically
 set clipboard^=unnamedplus
 
@@ -258,6 +267,20 @@ source /usr/share/doc/fzf/examples/key-bindings.bash
 # Download this file manually from the releases page on github (https://github.com/junegunn/fzf/releases/tag/0.44.1). 
 # Use the file from the release that matches the version of the package that got installed.
 source /usr/share/doc/fzf/examples/completion.bash
+
+# The commands inside reload have been taken from key-bindings.bash
+# If this file changes in a future version of fzf, this should also be changed to match.
+# It may be useful to add another shortcut for filtering out files in folders like node_modules, .venv, etc
+export FZF_CTRL_T_OPTS="
+  --prompt 'All> '
+  --header 'CTRL-D: Directories / CTRL-F: Files'
+  --bind "\""ctrl-d:change-prompt(Directories> )+reload(command find -L . -mindepth 1 \\\\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\\\) -prune \
+    -o -type d -print \
+    -o -type l -print 2> /dev/null | command cut -b3-)"\""
+  --bind "\""ctrl-f:change-prompt(Files> )+reload(command find -L . -mindepth 1 \\\\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\\\) -prune \
+    -o -type f -print \
+    -o -type l -print 2> /dev/null | command cut -b3-)"\"
+
 ```
 
 The vim plugin for fzf is installed by the Plug plugin manager in vim based on the ~/.vimrc shown in an earlier section.

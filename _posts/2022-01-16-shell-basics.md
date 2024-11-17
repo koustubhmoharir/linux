@@ -30,6 +30,8 @@ Variables can be created with the syntax `NAME=value`. Spaces on either side of 
 
 A variable can be exported with `export NAME` or `export NAME=value` to make the variable an *environment* variable.
 
+A variable can be unset with `unset NAME`. Tab completion is available on the name.
+
 Local variables are not accessible in any child process of the shell. Environment variables are copied into the environment of child processes.
 
 ## Strings
@@ -110,3 +112,24 @@ a 'b b' c
 ```
 
 Within bash, **but not in dash**, putting a `$` to the left of a single quoted string allows the use of backslash as an escape character. Thus `$'a\'b'` produces the string `a'b` and `$'a\\b'` produces the string `a\b`. Because this does not work in dash, this construct is best avoided in shell scripts. In general, writing robust shell scripts is very difficult. For any non-trivial task, it is better to use a language like Python instead of Shell. Using the non-portable improvements in any particular shell variant is probably not worth it. The use of Shell can be limited to interactive use and to tie together scripts and executables written in other languages. Some information about portability of syntax between bash and dash can be found [here](https://wiki.ubuntu.com/DashAsBinSh)
+
+## Initialization
+
+The shell can get initialized from [multiple places](https://unix.stackexchange.com/a/249922)
+
+System wide:
+
+- /etc/environment: specifically meant for environment variables
+- /etc/env.d/*: environment variables, split in multiple files
+- /etc/profile: all types of initialization scripts
+- /etc/profile.d/*: initialization scripts
+- /etc/bashrc, /etc/bash.bashrc: meant for functions and aliases
+
+User specific:
+
+- ~/.profile: used for all shells
+- ~/.pam_environment: part of Pluggable Authentication Modules for Linux
+- ~/.bash_profile: initialization for login (bash-)shells
+- ~/.bashrc: initialization for all interactive (bash-)shells
+- ~/.cshrc, ~/.zshrc, ~/.tcshrc: similar for non-bash shells
+
