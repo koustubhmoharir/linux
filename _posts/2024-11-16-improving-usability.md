@@ -110,6 +110,10 @@ The ~/.vimrc file can be configured to auto-install the vim-plug plugin manager.
 The configuration shown below adds the vim-polyglot, fzf, fzf.vim plugins  
 In the ~/.vimrc file, place the following content
 ```
+" Load the defaults.vim file first
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
+
 " Enable the mouse in all modes
 set mouse=a
 
@@ -208,6 +212,14 @@ let g:fzf_action = {
 nnoremap <silent> <Leader>f :Files!<CR>
 nnoremap <silent> <Leader>g :GFiles!<CR>
 nnoremap <silent> <Leader>b :Buffers!<CR>
+
+" Improve the DiffOrig command added by defaults.vim
+" This command opens a vertically split diff in a new tab
+" The original (saved) file is shown as a non modifiable buffer
+" It is sufficient to simply close the tab to exit everything cleanly
+command! DiffOrig tab split | vert new | set bt=nofile | r ++edit # | 0d_ 
+        \ | setlocal nomodifiable bufhidden=wipe nobuflisted noswapfile
+        \ | silent f Original | diffthis | wincmd p | diffthis
 
 ```
 

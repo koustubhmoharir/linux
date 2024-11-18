@@ -23,4 +23,5 @@ permalink: /guide/
 - [Redirection and Piping](_posts/2022-01-17-redirection-piping.md)
 - [Searching with grep](_posts/2022-01-18-searching-with-grep.md)
 - [Common Commands](_posts/2022-01-07-common-commands.md)
+- [Using fzf](_posts/2024-11-15-using-fzf.md)
 

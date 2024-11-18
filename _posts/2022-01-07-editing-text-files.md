@@ -39,13 +39,13 @@ In command mode, use the `h`, `j`, `k`, `l` keys instead of the arrow keys for m
 
 Typing a number before these keys moves the cursor by the specified number of units. For example, `5j` moves the cursor down by 5 lines. When combined with the feature that shows relative line numbers in the left margin, jumping to any visible line precisely is very easy. This can be particularly useful on slow connections where holding down a key is very imprecise and frustrating.
 
-To go to a specific absolute line number, type the line number followed by either `G` or `gg`. For example `135G` takes the cursor to line number 135, or the last line if the buffer contains fewer than 135 lines.
+To go to a specific absolute line number, type the line number followed by either `G` or `gg`. For example `135G` takes the cursor to line number 135, or the last line if the buffer contains fewer than 135 lines. `gg` without a count before it goes to the top of the buffer and `G` without a count before it goes to the bottom.
 
 `e` moves to the end of the current word, but if the cursor is already on the last character of a word, it moves to the end of the next word, where a word is a consecutive sequence of letters, numbers, and underscores. Similarly, `b` moves to the beginning of the current word or the previous word if it is already at the beginning of the current word. `E` and `B` (i.e `e` and `b` with Shift) can be used to shift the interpretation of word to a consecutive sequence of non-whitespace characters. `w` and `W` can be used to jump to the beginning of next word with the same interpretations of a word. `ge` and `gE` can be used to move to the end of the previous word, but this is not convenient. A lot of commands in vim can be modified in some way by prepending them with g. There does not seem to be any clear pattern to this.
 
 Each of these keys (`e`, `b`, `w`) can also be preceded by a number to move by that many words. For example `4e` is the same as pressing `e` 4 times. This is a general pattern in vim.
 
-`(` and `)` can be used to move to the beginning of the previous or next sentence. This is useful when working with text documents that may have many sentences on the same line.
+`(` and `)` can be used to move to the beginning of the previous or next sentence. This is useful when working with text documents that may have many sentences on the same line. `{` jumps above the current paragraph and `}` jumps below the current paragraph.
 
 To move to the beginning of the current line, press `0`. To move to the first non-blank character on the current line (the "real" beginning of the line), press `^`. To move to the end of the current line, press `$`. `^` and `$` are easy to remember as they mean beginning and end in regular expressions too.
 
@@ -53,6 +53,14 @@ To move to the beginning of the current line, press `0`. To move to the first no
 
 `f` followed by any character finds the next occurrence of the character on the current line and moves the cursor on that character. `F` finds the previous occurrenence. `t` followed by character moves the cursor on the character before the next occurrence. `T` moves the cursor on the character after the previous occurrence (same as t but in the other direction). `;` repeats the last such command. `,` repeats the last such command in the other direction. These commands can be used to quickly move to the desired position on the current line. Repeating a `t` or `T` command manually would not move the cursor at all, but when it is repeated with `;` or `,`, the effect is as if the cursor has been moved by one position between the repetions.
 
+`[` followed by `(` or `{`,  can be used to jump to the previous opening parenthesis or brace. `]` followed by `)` or `}` can be used to jump to the next closing parenthesis or brace. This is useful in code files. Note that this does *not* work with `[[` or `]]`. These sequences jump to the previous or next section instead.
+
+`m` followed by a letter from `a` to `z` (lower or upper case), `'`, or `` ` `` sets a mark at the current cursor position identified by the character after it, say `a`. `'a` (single quote) jumps to the beginning of the line containing the mark `a`. `` `a`` (tilde) jumps to the position. Using `'` or `` ` `` is convenient as it is easier to type the same character twice to return to the mark.
+
+
+`%` jumps to the matching parenthesis, brace, bracket. Note that this does *not* work for quotes.
+
+Pressing `Ctrl+o` and `Ctrl+i` moves the cursor to the previous and next positions in the jump list. The jump list is created when a jump command is used like the search commands, jump to mark commands, `%`, `(`, etc. Motion commands that are limited to a single line are *not* jump commands.
 
 ## Older content (to be organized properly)
 
