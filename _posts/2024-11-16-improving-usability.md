@@ -167,6 +167,9 @@ nnoremap <silent> <End> g$
 inoremap <silent> <Home> <C-o>g^
 inoremap <silent> <End> <C-o>g$
 
+" Remap Alt w to write the file from insert mode
+inoremap w <C-o>:w<CR>
+
 " Flash the cursor line with \c
 nnoremap <silent> <Leader>c :set cursorline<CR>:sleep 300m<CR>:set nocursorline<CR>
 
@@ -197,6 +200,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-obsession'
 call plug#end()
 
 " Add the Ctrl + Y shortcut to copy a filename from the Files window.
@@ -212,6 +217,7 @@ let g:fzf_action = {
 nnoremap <silent> <Leader>f :Files!<CR>
 nnoremap <silent> <Leader>g :GFiles!<CR>
 nnoremap <silent> <Leader>b :Buffers!<CR>
+nnoremap <silent> <Leader>t :NERDTree<CR>
 
 " Improve the DiffOrig command added by defaults.vim
 " This command opens a vertically split diff in a new tab
@@ -221,6 +227,13 @@ command! DiffOrig tab split | vert new | set bt=nofile | r ++edit # | 0d_
         \ | setlocal nomodifiable bufhidden=wipe nobuflisted noswapfile
         \ | silent f Original | diffthis | wincmd p | diffthis
 
+" When there are multiple windows open, the bd command closes the active
+" window too and this seems unintuitive. The Bd command below works around
+" this to load the previous buffer, split the window, load the next (original)
+" buffer in the split window and then delete the buffer to keep the window
+" layout as it originally was. This will still not work if the previous buffer
+" is the same as the current buffer.
+command Bd bp | sp | bn | bd
 ```
 
 ## Installing and configuring tmux
@@ -250,7 +263,7 @@ set -g prefix C-a
 set-window-option -g mode-keys vi
 
 # Ctrl + A followed by y will enable copy mode and move to the line above the prompt
-bind y copy-mode -e\; send-keys -X cursor-up
+bind y copy-mode -e\; send-keys k0
 
 # Allow moving between panes with the hjkl keys too (not just arrow keys)
 bind h select-pane -L

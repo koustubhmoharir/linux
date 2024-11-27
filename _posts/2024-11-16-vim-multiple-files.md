@@ -56,4 +56,12 @@ Any command that opens a buffer without explicitly specifying a window will do s
 
 When using fzf's `\f` or `\b` to find files or buffers, pressing `Ctrl+X` splits the window horizontally (x for horizontal) and `Ctrl+V` splits the window vertically with the buffer opened in the top or left windows created in the split.
 
+Using the `:bd` command to close the buffer in a window closes the window too when there are multiple windows. Since this is usually not what is desired, use the improved `:Bd` command instead to open the previous buffer and then close the current one. This still closes the window if the current and previous buffers are the same. This may happen when a window is split to show the same buffer on both sides.
 
+## Using multiple tabs
+
+When working with diffs, it is often useful to open them in a new tab. Use `Ctrl+PageUp` and `Ctrl+PageDown` to move between tabs and `:tabclose` or `:tabc` to close a tab.
+
+## Working with sessions
+
+When vim is started with `vi -S`, vim looks for an existing vim.session file in the current directory. If the file exists, the list of buffers, and the layout of windows is loaded from the file. The Obsession plugin makes it slightly easier to work with sessions. Running the `:Obsess` command creates a vim.session file if it does not already exist and automatically updates it when necessary. Without the plugin, the `:mks!` command would need to be run manually every time to persist the session information. If vi is started without `-S`, an existing session can still be loaded with `source Session.vim`. Running the `:Obsess` command in such a case instead of `source Session.vim` unfortunately overwrites the session file.
